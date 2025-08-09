@@ -8,10 +8,10 @@
 			"extensions": [
 				"golang.Go",
 				"ms-azuretools.vscode-docker",
-				"Postman.postman-for-vscode",
 				"cweijan.vscode-mysql-client2",
 				"GitHub.copilot",
-				"GitHub.copilot-chat"
+				"GitHub.copilot-chat",
+				"seatonjiang.gitmoji-vscode"
 			]
 		}
 	}
