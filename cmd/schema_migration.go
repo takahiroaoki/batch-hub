@@ -11,12 +11,13 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/takahiroaoki/batch-hub/config"
 	"github.com/takahiroaoki/batch-hub/fs"
+	"github.com/takahiroaoki/batch-hub/infra/database"
 	"github.com/takahiroaoki/batch-hub/util"
 )
 
 func newMigrateCmd() *cobra.Command {
 	migrateCmd := &cobra.Command{
-		Use: "migrate",
+		Use: "schema-migration",
 		Run: func(cmd *cobra.Command, args []string) {
 			_ = cmd.Help()
 		},
@@ -36,7 +37,7 @@ func newMigrate() (*migrate.Migrate, error) {
 		return nil, err
 	}
 
-	return migrate.NewWithSourceInstance("httpfs", rsc, config.GetDataBaseURL())
+	return migrate.NewWithSourceInstance("httpfs", rsc, database.DatabaseURL(config.NewDatabaseConfig()))
 }
 
 func runTemplate(fn func(_m *migrate.Migrate) error) error {

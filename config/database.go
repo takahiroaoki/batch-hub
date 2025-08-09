@@ -1,13 +1,35 @@
 package config
 
-import (
-	"fmt"
-)
-
-func GetDataSourceName() string {
-	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8", env.dbUser, env.dbPassword, env.dbHost, env.dbPort, env.dbDatabase)
+type DatabaseConfig interface {
+	Host() string
+	Port() string
+	Database() string
+	User() string
+	Password() string
 }
 
-func GetDataBaseURL() string {
-	return fmt.Sprintf("%s://%s", "mysql", GetDataSourceName())
+type databaseConfig struct{}
+
+func (d databaseConfig) Host() string {
+	return env.dbHost
+}
+
+func (d databaseConfig) Port() string {
+	return env.dbPort
+}
+
+func (d databaseConfig) Database() string {
+	return env.dbDatabase
+}
+
+func (d databaseConfig) User() string {
+	return env.dbUser
+}
+
+func (d databaseConfig) Password() string {
+	return env.dbPassword
+}
+
+func NewDatabaseConfig() DatabaseConfig {
+	return databaseConfig{}
 }
