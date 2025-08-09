@@ -1,0 +1,8 @@
+name: UT
+description: UT
+runs:
+  using: "composite"
+  steps:
+    - name: UT
+      run: make ut
+      shell: sh
