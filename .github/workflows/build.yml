@@ -1,0 +1,37 @@
+name: Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_version:
+        type: string
+        required: true
+        description: batch-hub-${build_bersion}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: golang:1.24.5-alpine3.22
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Build
+        run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o batch-hub-${{ github.event.inputs.build_version }}
+      - name: Checkout to artifact-storage
+        uses: actions/checkout@v4
+        with:
+          repository: takahiroaoki/artifact-storage.git
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          path: artifact-storage
+          ref: main
+      - name: Upload
+        working-directory: artifact-storage
+        run: |
+          git config --local user.email ""
+          git config --local user.name "GitHub Actions"
+          mkdir -p ./batch-hub
+          mv -n ../batch-hub-${{ github.event.inputs.build_version }} ./batch-hub/
+          git add .
+          git commit -m ":sparkles: Build by GitHub Actions"
+          git push
